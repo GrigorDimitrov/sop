@@ -1,0 +1,18 @@
+# Custom Rules
+alert tcp any any -> $HOME_NET 7789 (msg: "Vote for Security Onion Toolsmith Tool of 2011!"; reference: url,http://holisticinfosec.blogspot.com/2011/12/choose-2011-toolsmith-tool-of-year.html; content: "toolsmith"; flow:to_server; nocase; sid:9000547; rev:1;)
+
+alert tcp any any -> $HOME_NET any (msg:"TCP SYN flood attack detected"; flags:S; threshold: type threshold, track by_dst, count 1000, seconds 60; sid: 5000002;)
+
+# Community Rules
+## Neutrino EK
+alert tcp $EXTERNAL_NET $HTTP_PORTS -> $HOME_NET any ( msg: "EXPLOIT-KIT Neutrino exploit kit landing page"; flow:to_client,established; content:"|3D 5B|0x9,0x9,0x2f,0x2a,0x2a,0xa,0x9,0x9,0x20,0x2a,0x20,",nocase; metadata:impact_flag red,policy balanced-ips drop,policy max-detect-ips drop,policy security-ips drop,service http; reference:cve,2013-0431; reference:cve,2013-1493; reference:cve,2013-2423; reference:cve,2013-2465; reference:url,malware.dontneedcoffee.com/2013/03/hello-neutrino-just-one-more-exploit-kit.html; classtype:trojan-activity; sid:26095; rev:3; )
+
+## SQL Injection
+alert tcp $EXTERNAL_NET any -> $HTTP_SERVERS $HTTP_PORTS ( msg:"SQL generic sql insert injection attempt - GET parameter"; flow:to_server,established; content:"insert",fast_pattern,nocase; pcre:"/insert\s+into\s+[^\/\\]+/i"; metadata:policy max-detect-ips drop,policy security-ips drop; reference:cve,2012-2998; reference:url,www.securiteam.com/securityreviews/5DP0N1P76E.html; classtype:web-application-attack; sid:13513; rev:19; )
+
+# XSS
+alert tcp $EXTERNAL_NET any -> $HOME_NET $HTTP_PORTS ( msg:"SERVER-WEBAPP WordPress XSS fs-admin.php injection attempt"; flow:to_server,established; content:"page=forum-server/fs-admin/fs-admin.php",fast_pattern,nocase; http_uri; pcre:"/[?&](groupid|usergroup_id)=[^&]+?([\x22\x27\x3c\x3e\x28\x29]|script|onload|src)/i"; metadata:policy max-detect-ips drop; classtype:web-application-attack; sid:24561; rev:4; )
+
+# EternalBlue
+alert tcp any any -> $HOME_NET 445 ( msg:"OS-WINDOWS Microsoft Windows SMB remote code execution attempt"; flow:to_server,established; content:"|FF|SMB3|00 00 00 00|",depth 9,offset 4; byte_extract:2,26,TotalDataCount,relative,little; byte_test:2,>,TotalDataCount,20,relative,little; metadata:policy balanced-ips drop,policy connectivity-ips drop,policy max-detect-ips drop,policy security-ips drop,ruleset community; reference:cve,2017-0144; reference:cve,2017-0146; reference:url,blog.talosintelligence.com/2017/05/wannacry.html; reference:url,isc.sans.edu/forums/diary/ETERNALBLUE+Possible+Window+SMB+Buffer+Overflow+0Day/22304/; reference:url,technet.microsoft.com/en-us/security/bulletin/MS17-010; classtype:attempted-admin; sid:41978; rev:5; )
+
