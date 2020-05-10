@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# update Snort rules
-cp -f local.rules /etc/nsm/rules/local.rules && rule-update
-
 # edit Snort variables
 ## sniffing interface
 printf "\nPlesae, enter your sniffing interface name (e.g. ens33)\n"
@@ -39,3 +36,9 @@ tcprewrite --endpoints=$ip1:$ip2 --cachefile=syn_flood.cache --infile=syn_flood.
 tcprewrite --endpoints=$ip1:$ip2 --cachefile=syn_scan.cache --infile=syn_scan.pcapng --outfile=output/output_scan.pcap --skipbroadcast
 
 tcprewrite --endpoints=$ip1:$ip2 --cachefile=xss.cache --infile=xss.pcapng --outfile=output/output_xss.pcap --skipbroadcast
+
+# update Snort rules
+cp -f local.rules /etc/nsm/rules/local.rules && rule-update
+
+# restart SO services
+so-restart
