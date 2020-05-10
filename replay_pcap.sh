@@ -45,27 +45,27 @@ do
     case "$opt" in
     -eb)
        echo "Running EternalBlue"
-       tcpreplay -i $INTERFACE eternalblue.pcap
+       tcpreplay -i $INTERFACE output/output_eb.pcap
        ;;
     -ek)
        echo "Running Exploit Kit"
-       tcpreplay -i $INTERFACE exploit_kit.pcapng
+       tcpreplay -i $INTERFACE output/output_ek.pcap
        ;;
     -scan)
        echo "Running SYN Scan"
-       tcpreplay -i $INTERFACE syn_scan.pcapng
+       tcpreplay -i $INTERFACE output/output_scan.pcap
        ;;
     -flood)
        echo "Running SYN Flood"
-       tcpreplay -i $INTERFACE syn_flood.pcapng
+       tcpreplay -i $INTERFACE output/output_flood.pcap
+
        ;;
     -sql)
        echo "Running SQL Injection"
-       tcpreplay -i $INTERFACE sql_injection.pcapng
-       ;;
+       tcpreplay -i $INTERFACE output/output_sql.pcap       ;;
     -xss)
        echo "Running XSS"
-       tcpreplay -i $INTERFACE xss.pcapng
+       tcpreplay -i $INTERFACE output/output_xss.pcap
        ;;
     -i)
        ;;
