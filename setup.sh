@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# edit Snort variables
-## sniffing interface
+# sniffing interface
 printf "\nPlesae, enter your sniffing interface name (e.g. ens33)\n"
 read -p 'Sniffing Interface: ' intf
 
@@ -16,7 +15,7 @@ while [[ ! $netw =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/[0-9][0-9]$
 done
 echo Selected Network: $netw
 
-# edit /etc/nsm/$hostname+"-"+$intf/snort.conf
+# edit /etc/nsm/$hostname-$intf/snort.conf
 sed -i "s|^ipvar HOME_NET .*$|ipvar HOME_NET $netw|" /etc/nsm/"$HOSTNAME-$intf"/snort.conf
 
 # create client/server IP addresses
